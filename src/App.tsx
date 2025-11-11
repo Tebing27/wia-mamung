@@ -1,4 +1,7 @@
+import CategorySection from "./components/CategorySection";
+import Footer from "./components/Footer";
 import HeroSection from "./components/HeroSection";
+import LocationSection from "./components/LocationSection";
 import { Navbar } from "./components/Navbar";
 
 function App() {
@@ -6,6 +9,9 @@ function App() {
     <>
       <Navbar />
       <HeroSection />
+      <CategorySection />
+      <LocationSection />
+      <Footer />
     </>
   );
 }

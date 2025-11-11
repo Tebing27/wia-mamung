@@ -70,7 +70,7 @@ export default function HeroSection() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-32">
         <div className="grid md:grid-cols-2 gap-8 items-start">
           <div>
-            <h1 className="text-5xl font-bold mb-6">UMKM SASUMA.</h1>
+            <h1 className="text-5xl font-bold mb-6">UMKM Mamung</h1>
             <p className="text-lg mb-8 leading-relaxed">
               Temukan berbagai jenis usaha lokal, dari kuliner, kerajinan,
               sampai layanan jasa. Gunakan peta interaktif untuk mencari lokasi
