@@ -6,6 +6,15 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 // Mapbox token from environment variable
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
+// Available categories
+const categories = [
+    { value: "Semua", label: "Semua Kategori" },
+    { value: "Kuliner", label: "Kuliner" },
+    { value: "Fashion", label: "Fashion" },
+    { value: "Perdagangan", label: "Perdagangan" },
+    { value: "Jasa", label: "Jasa" }
+];
+
 // UMKM data with coordinates (example coordinates around Jakarta area)
 const umkmList = [
     {
@@ -21,7 +30,7 @@ const umkmList = [
     {
         id: 2,
         name: "Cinangka",
-        category: "Minuman",
+        category: "Kuliner",
         description: "Es teh, kopi, jus buah segar",
         imageUrl: "https://images.unsplash.com/photo-1544025162-d76694265947?w=200&h=200&fit=crop",
         latitude: -6.2188,
@@ -61,7 +70,7 @@ const umkmList = [
     {
         id: 6,
         name: "Toko Elektronik Jaya",
-        category: "Elektronik",
+        category: "Perdagangan",
         description: "HP, laptop, aksesoris",
         imageUrl: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=200&h=200&fit=crop",
         latitude: -6.2288,
@@ -90,23 +99,70 @@ const umkmList = [
     }
 ];
 
-export default function LocationSection() {
-    const [searchQuery, setSearchQuery] = useState("Tebing");
-    const [selectedCategory, setSelectedCategory] = useState("Kuliner");
+interface LocationSectionProps {
+    selectedCategory: string | null;
+}
+
+export default function LocationSection({ selectedCategory: propSelectedCategory }: LocationSectionProps) {
+    const [searchQuery, setSearchQuery] = useState("");
+    const [localSelectedCategory, setLocalSelectedCategory] = useState<string>("Semua");
     const [minPrice, setMinPrice] = useState("0");
     const [maxPrice, setMaxPrice] = useState("1000");
     const [currentUmkmIndex, setCurrentUmkmIndex] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
+    const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+
+    // Filter UMKM based on selected category from props or local state
+    const activeCategory = propSelectedCategory || localSelectedCategory;
+    
+    // Combined filter: category + search
+    const filteredUmkmList = umkmList.filter(umkm => {
+        // Filter by category
+        const matchesCategory = activeCategory === "Semua" || 
+            umkm.category.toLowerCase() === activeCategory.toLowerCase();
+        
+        // Filter by search query
+        const matchesSearch = searchQuery === "" || 
+            umkm.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            umkm.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            umkm.description.toLowerCase().includes(searchQuery.toLowerCase());
+        
+        return matchesCategory && matchesSearch;
+    });
+
+    // Handle category selection from dropdown
+    const handleCategorySelect = (category: string) => {
+        setLocalSelectedCategory(category);
+        setShowCategoryDropdown(false);
+        setCurrentPage(0); // Reset to first page
+    };
+
+    // Reset category filter
+    const handleResetFilter = () => {
+        setLocalSelectedCategory("Semua");
+        setCurrentPage(0);
+    };
+
+    // Highlight search term in text
+    const highlightText = (text: string, query: string) => {
+        if (!query) return text;
+        const parts = text.split(new RegExp(`(${query})`, 'gi'));
+        return parts.map((part, i) => 
+            part.toLowerCase() === query.toLowerCase() 
+                ? <mark key={i} className="bg-[#FFC107] text-black px-0.5 rounded">{part}</mark>
+                : part
+        );
+    };
 
     // Desktop: show 4 cards at a time
     const itemsPerPage = 4;
-    const totalPages = Math.ceil(umkmList.length / itemsPerPage);
+    const totalPages = Math.ceil(filteredUmkmList.length / itemsPerPage);
 
-    const currentUmkm = umkmList[currentUmkmIndex];
+    const currentUmkm = filteredUmkmList[currentUmkmIndex] || umkmList[0];
 
     // Get visible UMKM for desktop pagination
     const startIndex = currentPage * itemsPerPage;
-    const visibleUmkmList = umkmList.slice(startIndex, startIndex + itemsPerPage);
+    const visibleUmkmList = filteredUmkmList.slice(startIndex, startIndex + itemsPerPage);
 
     // Check if at start or end for desktop
     const isAtStart = currentPage === 0;
@@ -114,15 +170,16 @@ export default function LocationSection() {
 
     const handleSearch = (value: string) => {
         setSearchQuery(value);
-        console.log("Searching for:", value);
+        setCurrentPage(0); // Reset to first page when searching
     };
 
     const handleClearSearch = () => {
         setSearchQuery("");
+        setCurrentPage(0);
     };
 
     const handleCategoryFilter = () => {
-        console.log("Filter by category:", selectedCategory);
+        setShowCategoryDropdown(!showCategoryDropdown);
     };
 
     // Mobile navigation (single UMKM)
@@ -155,9 +212,24 @@ export default function LocationSection() {
     return (
         <section className="py-12 md:py-20 px-4 md:px-20 bg-white">
             <div className="container mx-auto">
-                <h2 className="text-3xl md:text-5xl lg:text-7xl font-bold text-center mb-8 md:mb-16">
-                    Lokasi
-                </h2>
+                <div className="text-center mb-8 md:mb-16">
+                    <h2 className="text-3xl md:text-5xl lg:text-7xl font-bold mb-4">
+                        Lokasi
+                    </h2>
+                    {(propSelectedCategory || (activeCategory !== "Semua")) && (
+                        <div className="flex items-center justify-center gap-2">
+                            <span className="bg-[#FFC107] text-black text-sm font-bold px-4 py-2 rounded-lg">
+                                Filter: {propSelectedCategory || activeCategory}
+                            </span>
+                            <button
+                                onClick={handleResetFilter}
+                                className="text-sm text-[#003F88] hover:underline font-semibold"
+                            >
+                                Lihat Semua
+                            </button>
+                        </div>
+                    )}
+                </div>
 
                 {/* Mobile Layout */}
                 <div className="md:hidden">
@@ -170,13 +242,15 @@ export default function LocationSection() {
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                placeholder="Tebing"
+                                placeholder="Cari nama UMKM, kategori..."
                                 className="bg-transparent flex-1 outline-none text-sm"
                             />
-                            <X
-                                onClick={handleClearSearch}
-                                className="w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800"
-                            />
+                            {searchQuery && (
+                                <X
+                                    onClick={handleClearSearch}
+                                    className="w-4 h-4 text-gray-600 cursor-pointer hover:text-gray-800"
+                                />
+                            )}
                         </div>
 
                         {/* Filters */}
@@ -186,7 +260,7 @@ export default function LocationSection() {
                                 className="bg-[#F9F5F0] rounded-md px-4 py-2 text-sm flex items-center gap-2 flex-1 hover:bg-gray-200"
                             >
                                 <Filter className="w-4 h-4" />
-                                {selectedCategory}
+                                {activeCategory}
                             </button>
                             <button className="bg-[#F9F5F0] rounded-md px-4 py-2 text-sm flex items-center gap-1 hover:bg-gray-200">
                                 <DollarSign className="w-4 h-4" />
@@ -318,24 +392,51 @@ export default function LocationSection() {
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => handleSearch(e.target.value)}
-                                placeholder="Tebing"
+                                placeholder="Cari nama UMKM, kategori..."
                                 className="bg-transparent flex-1 outline-none text-sm text-gray-700"
                             />
-                            <X
-                                onClick={handleClearSearch}
-                                className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600"
-                            />
+                            {searchQuery && (
+                                <X
+                                    onClick={handleClearSearch}
+                                    className="w-5 h-5 text-gray-400 cursor-pointer hover:text-gray-600"
+                                />
+                            )}
                         </div>
 
                         {/* Filters */}
-                        <div className="flex gap-2 mb-4">
-                            <button
-                                onClick={handleCategoryFilter}
-                                className="bg-white rounded-lg px-3 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 flex-1 shadow-sm"
-                            >
-                                <Filter className="w-4 h-4" />
-                                {selectedCategory}
-                            </button>
+                        <div className="flex gap-2 mb-4 relative">
+                            {/* Category Dropdown */}
+                            <div className="flex-1 relative">
+                                <button
+                                    onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+                                    className="w-full bg-white rounded-lg px-3 py-2 text-sm flex items-center gap-2 hover:bg-gray-50 shadow-sm"
+                                >
+                                    <Filter className="w-4 h-4" />
+                                    <span className="flex-1 text-left">{activeCategory || "Semua"}</span>
+                                    <ChevronDown className={`w-4 h-4 transition-transform ${showCategoryDropdown ? 'rotate-180' : ''}`} />
+                                </button>
+                                
+                                {/* Dropdown Menu */}
+                                {showCategoryDropdown && (
+                                    <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+                                        {categories.map((cat) => (
+                                            <button
+                                                key={cat.value}
+                                                onClick={() => handleCategorySelect(cat.value)}
+                                                className={`w-full px-3 py-2 text-sm text-left hover:bg-gray-50 flex items-center justify-between ${
+                                                    activeCategory === cat.value ? 'bg-[#FFC107] font-semibold' : ''
+                                                }`}
+                                            >
+                                                <span>{cat.label}</span>
+                                                {activeCategory === cat.value && (
+                                                    <span className="text-xs">✓</span>
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                            
                             <button className="bg-white rounded-lg px-3 py-2 text-sm hover:bg-gray-50 shadow-sm">
                                 Minimal
                             </button>
@@ -344,9 +445,42 @@ export default function LocationSection() {
                             </button>
                         </div>
 
+                        {/* Results Count */}
+                        <div className="mb-3 px-1">
+                            <p className="text-white text-xs">
+                                Menampilkan <span className="font-bold">{filteredUmkmList.length}</span> dari {umkmList.length} UMKM
+                                {searchQuery && (
+                                    <span className="text-[#FFC107]"> • "{searchQuery}"</span>
+                                )}
+                                {activeCategory !== "Semua" && !searchQuery && (
+                                    <span className="text-[#FFC107]"> • {activeCategory}</span>
+                                )}
+                            </p>
+                        </div>
+
                         {/* UMKM Cards - Fixed height for consistency */}
                         <div className="flex-1 flex flex-col gap-3 min-h-0">
-                            {visibleUmkmList.map((umkm) => (
+                            {filteredUmkmList.length === 0 ? (
+                                <div className="flex-1 flex items-center justify-center">
+                                    <div className="text-center text-white">
+                                        <Search className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                                        <p className="text-sm font-semibold mb-1">Tidak ada hasil</p>
+                                        <p className="text-xs opacity-75">
+                                            {searchQuery ? `Tidak ditemukan UMKM dengan kata kunci "${searchQuery}"` : 'Tidak ada UMKM di kategori ini'}
+                                        </p>
+                                        <button
+                                            onClick={() => {
+                                                handleClearSearch();
+                                                handleResetFilter();
+                                            }}
+                                            className="mt-3 text-xs text-[#FFC107] hover:underline font-semibold"
+                                        >
+                                            Reset Filter
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                visibleUmkmList.map((umkm) => (
                                 <div key={umkm.id} className="bg-white rounded-xl p-3 shadow-sm flex-shrink-0 h-[135px]">
                                     <div className="flex gap-3 h-full">
                                         <div className="w-[95px] h-[111px] bg-gray-300 rounded-lg flex-shrink-0 overflow-hidden">
@@ -359,9 +493,11 @@ export default function LocationSection() {
                                         <div className="flex-1 flex flex-col justify-between">
                                             <div>
                                                 <div className="flex items-start justify-between gap-2 mb-1">
-                                                    <h3 className="text-base font-bold text-gray-900 leading-tight break-words flex-1">{umkm.name}</h3>
+                                                    <h3 className="text-base font-bold text-gray-900 leading-tight break-words flex-1">
+                                                        {searchQuery ? highlightText(umkm.name, searchQuery) : umkm.name}
+                                                    </h3>
                                                     <span className="bg-[#FFC107] text-black text-[10px] font-bold px-2 py-1 rounded flex-shrink-0">
-                                                        {umkm.category}
+                                                        {searchQuery ? highlightText(umkm.category, searchQuery) : umkm.category}
                                                     </span>
                                                 </div>
                                                 <p className="text-[11px] text-gray-500 leading-tight">
@@ -378,7 +514,8 @@ export default function LocationSection() {
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                                ))
+                            )}
                         </div>
 
                         {/* Navigation Buttons - Up/Down at bottom */}
@@ -421,8 +558,8 @@ export default function LocationSection() {
                             {/* Navigation Controls */}
                             <NavigationControl position="bottom-right" />
 
-                            {/* UMKM Markers */}
-                            {umkmList.map((umkm) => (
+                            {/* UMKM Markers - Filtered by category */}
+                            {filteredUmkmList.map((umkm) => (
                                 <Marker
                                     key={umkm.id}
                                     longitude={umkm.longitude}
@@ -433,7 +570,7 @@ export default function LocationSection() {
                                         className="w-10 h-10 rounded-full border-3 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform flex items-center justify-center"
                                         style={{ backgroundColor: umkm.color }}
                                         onClick={() => handleViewLocation(umkm.name)}
-                                        title={umkm.name}
+                                        title={`${umkm.name} - ${umkm.category}`}
                                     >
                                         <div className="w-3 h-3 bg-white rounded-full"></div>
                                     </div>

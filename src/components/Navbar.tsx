@@ -42,23 +42,10 @@ export function Navbar() {
 
           {/* 5. Item sebelah kanan (Desktop) - DIPERBAIKI */}
           <div className="hidden md:flex shrink-0 items-center space-x-4">
-            <a
-              href="#"
-              className="flex items-center space-x-1 text-slate-700 hover:text-slate-900"
-            >
-              <ShoppingCart className="h-5 w-5" />
-              <span className="font-medium">0</span>
-            </a>
             <button className="flex items-center space-x-1 p-2 rounded-lg text-slate-700 hover:bg-gray-100">
               <span className="font-medium">ID</span>
               <ChevronDown className="h-4 w-4" />
             </button>
-            <a
-              href="#"
-              className="bg-yellow-400 text-black px-4 py-2 rounded-lg font-medium hover:bg-yellow-500 transition-colors"
-            >
-              Daftar
-            </a>
           </div>
 
           {/* 6. Tombol Hamburger (Mobile) - DIPERBAIKI */}
@@ -97,24 +84,11 @@ export function Navbar() {
               <hr />
 
               {/* Link tambahan dari sisi kanan */}
-              <a
-                href="#"
-                className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                <span>Keranjang (0)</span>
-              </a>
               <button className="flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
                 <span className="font-medium">ID</span>
                 <ChevronDown className="h-4 w-4" />
                 <span>Bahasa</span>
               </button>
-              <a
-                href="#"
-                className="block w-full bg-yellow-400 text-black px-4 py-2 rounded-lg font-medium text-center hover:bg-yellow-500 transition-colors"
-              >
-                Daftar
-              </a>
             </div>
           </div>
         </nav>

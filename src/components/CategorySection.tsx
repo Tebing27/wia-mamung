@@ -21,49 +21,25 @@ const categories = [
     },
     {
         id: 3,
-        name: "Kedaung",
+        name: "Perdagangan",
         umkmCount: "20 UMKM",
         bgColor: "bg-[#9FE8BE]",
         imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop"
     },
     {
         id: 4,
-        name: "Jakarta",
+        name: "Jasa",
         umkmCount: "20 UMKM",
         bgColor: "bg-[#B6CEB4]",
         imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop"
     },
-    {
-        id: 5,
-        name: "Pondok Labu",
-        umkmCount: "20 UMKM",
-        bgColor: "bg-[#D9E9CF]",
-        imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop"
-    },
-    {
-        id: 6,
-        name: "Cikarang",
-        umkmCount: "20 UMKM",
-        bgColor: "bg-[#9FE8BE]",
-        imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop"
-    },
-    {
-        id: 7,
-        name: "Tanjung Prioek",
-        umkmCount: "20 UMKM",
-        bgColor: "bg-[#B6CEB4]",
-        imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop"
-    },
-    {
-        id: 8,
-        name: "Bekasi",
-        umkmCount: "20 UMKM",
-        bgColor: "bg-[#96A78D]",
-        imageUrl: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&h=300&fit=crop"
-    }
 ];
 
-export default function CategorySection() {
+interface CategorySectionProps {
+    onCategoryClick: (category: string) => void;
+}
+
+export default function CategorySection({ onCategoryClick }: CategorySectionProps) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     // Desktop: show 3 cards at a time
@@ -99,8 +75,7 @@ export default function CategorySection() {
     const isAtEnd = currentIndex >= (totalPagesDesktop - 1) * itemsPerPageDesktop;
 
     const handleViewLocation = (categoryName: string) => {
-        console.log(`View location for: ${categoryName}`);
-        // Navigate to location or show map
+        onCategoryClick(categoryName);
     };
 
     // Get visible categories for desktop (show 3 cards per page)

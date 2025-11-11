@@ -79,7 +79,7 @@ export default function HeroSection() {
 
             <div className="bg-white text-black rounded-lg p-6 max-w-7xl">
               <div className="text-sm text-gray-600 mb-2">
-                UMKM SASUMA - PENGASINAN
+                UMKM SASUMA
               </div>
               <div className="flex items-center justify-between mb-4">
                 <div>
