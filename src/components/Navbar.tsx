@@ -1,54 +1,66 @@
-"use client"; // Tetap gunakan ini jika Anda di Next.js App Router
-
 import { useState } from "react";
-import { Menu, X, ShoppingCart, ChevronDown } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
-// 1. Data menu diperbarui sesuai gambar
 const menuLink = [
-  { href: "#", label: "Beranda" },
-  { href: "#", label: "Wilayah" },
-  { href: "#", label: "Lokasi" },
-  { href: "#", label: "Toko" },
+  { href: "#beranda", label: "Beranda" },
+  { href: "#kategori", label: "Kategori" },
+  { href: "#lokasi", label: "Lokasi" },
 ];
 
 export function Navbar() {
   const [isOpen, setOpen] = useState(false);
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    setOpen(false);
+    
+    if (href === "#beranda") {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const element = document.querySelector(href);
+      if (element) {
+        const offset = 80; // Offset for fixed navbar
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   return (
-    // Latar belakang header (biru)
-    <header className="w-full p-4 bg-[#0B4EA2]">
+    <header className="w-full p-4 bg-[#0B4EA2] sticky top-0 z-50">
       <div className="mx-auto max-w-7xl">
-        {/* 2. Navbar dibuat solid putih dengan shadow, sesuai gambar */}
         <nav className="relative flex w-full items-center justify-between rounded-xl bg-white p-4 shadow-md md:rounded-2xl">
-          {/* 3. Logo diubah menjadi "Logo." */}
-          <a href="#" className="shrink-0 inline-flex items-center gap-4">
+          {/* Logo */}
+          <a 
+            href="#beranda" 
+            onClick={(e) => handleClick(e, "#beranda")}
+            className="shrink-0 inline-flex items-center gap-4"
+          >
             <span className="text-2xl md:text-3xl font-bold text-slate-900">
               Mamung
             </span>
           </a>
 
-          {/* 4. Link menu tengah (Desktop) - DIPERBAIKI */}
+          {/* Desktop Menu Links */}
           <div className="hidden md:flex flex-1 justify-center items-center space-x-6">
             {menuLink.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="text-base font-medium text-black transition-colors hover:text-black"
+                onClick={(e) => handleClick(e, link.href)}
+                className="text-base font-medium text-black transition-colors hover:text-blue-600"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          {/* 5. Item sebelah kanan (Desktop) - DIPERBAIKI */}
-          <div className="hidden md:flex shrink-0 items-center space-x-4">
-            <button className="flex items-center space-x-1 p-2 rounded-lg text-slate-700 hover:bg-gray-100">
-              <span className="font-medium">ID</span>
-              <ChevronDown className="h-4 w-4" />
-            </button>
-          </div>
-
-          {/* 6. Tombol Hamburger (Mobile) - DIPERBAIKI */}
+          {/* Mobile Menu Toggle */}
           <div className="md:hidden items-center">
             <button
               onClick={() => setOpen(!isOpen)}
@@ -60,7 +72,7 @@ export function Navbar() {
             </button>
           </div>
 
-          {/* 7. Menu Dropdown (Mobile) - (Sudah benar) */}
+          {/* Mobile Dropdown Menu */}
           <div
             className={`md:hidden absolute top-full left-0 w-full mt-2 transition-all duration-300 ${
               isOpen
@@ -69,26 +81,16 @@ export function Navbar() {
             }`}
           >
             <div className="rounded-lg bg-white shadow-lg p-4 space-y-3">
-              {/* Link dari menuLink */}
               {menuLink.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={() => setOpen(false)}
+                  onClick={(e) => handleClick(e, link.href)}
                   className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
                 >
                   {link.label}
                 </a>
               ))}
-
-              <hr />
-
-              {/* Link tambahan dari sisi kanan */}
-              <button className="flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
-                <span className="font-medium">ID</span>
-                <ChevronDown className="h-4 w-4" />
-                <span>Bahasa</span>
-              </button>
             </div>
           </div>
         </nav>

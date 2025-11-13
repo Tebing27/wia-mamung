@@ -1,161 +1,156 @@
-# UMKM SASUMA Landing Page
+# UMKM Mamung - Platform Pencarian UMKM Lokal
 
-Landing page responsive untuk UMKM Sasuma dengan integrasi Mapbox untuk menampilkan lokasi UMKM.
+Platform web interaktif untuk menemukan dan mendukung UMKM (Usaha Mikro, Kecil, dan Menengah) lokal di wilayah Mamung dengan fitur peta interaktif dan pencarian yang mudah digunakan.
 
-## 🚀 Quick Start
+## 🚀 Tech Stack
 
-### 1. Install Dependencies
-```bash
-npm install
-```
+- **React** - Library JavaScript untuk membangun user interface
+- **TypeScript** - Superset JavaScript dengan type safety
+- **Vite** - Build tool dan development server yang cepat
+- **Tailwind CSS** - Utility-first CSS framework untuk styling
+- **Mapbox GL JS** - Library untuk peta interaktif
+- **react-map-gl** - React wrapper untuk Mapbox
+- **Lucide React** - Icon library modern
+- **Shadcn UI** - Reusable component library
 
-### 2. Setup Mapbox API Key
-1. Buat akun gratis di [Mapbox](https://account.mapbox.com/auth/signup/)
-2. Copy API token dari [Access Tokens page](https://account.mapbox.com/access-tokens/)
-3. Buat file `.env` di root project:
+## 📦 Cara Menjalankan Project
+
+### Prerequisites
+- Node.js (versi 16 atau lebih tinggi)
+- npm atau yarn
+- Mapbox Access Token (gratis dari [mapbox.com](https://www.mapbox.com/))
+
+### Langkah-langkah
+
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/Tebing27/wia-mamung.git
+   cd wia-mamung
    ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Setup environment variables**
+   
+   Buat file `.env` di root folder dan tambahkan Mapbox token:
+   ```env
    VITE_MAPBOX_TOKEN=your_mapbox_token_here
    ```
-4. Ganti `your_mapbox_token_here` dengan token Mapbox kamu
 
-### 3. Run Development Server
+4. **Run development server**
+   ```bash
+   npm run dev
+   ```
+
+5. **Buka browser**
+   
+   Akses `http://localhost:5173`
+
+## 📋 Progress Saat Ini
+
+### ✅ Fitur yang Sudah Selesai
+
+#### 1. Landing Page (Hero Section)
+- Hero section dengan carousel auto-play menampilkan UMKM unggulan
+- Responsive design untuk mobile, tablet, dan desktop
+- Tombol "Lihat Lokasi" yang mengarah ke peta dengan zoom otomatis
+
+#### 2. Halaman Kategori
+- Tampilan kategori UMKM (Kuliner, Fashion, Perdagangan, Jasa)
+- Pagination dengan navigasi prev/next
+- Filter kategori yang terintegrasi dengan peta
+
+#### 3. Halaman Lokasi (Map Section)
+- **Peta Interaktif Mapbox** dengan marker untuk setiap UMKM
+- **Fitur Pencarian** real-time dengan highlighting hasil
+- **Filter Kategori** dengan dropdown
+- **Pagination** untuk daftar UMKM (4 cards per halaman)
+- **Detail Popup** dengan informasi lengkap UMKM:
+  - Nama, kategori, deskripsi
+  - Alamat lengkap
+  - Lisensi usaha
+  - Social media (Instagram, Facebook, TikTok)
+  - Website dan nomor telepon
+  - Link ke Google Maps
+- **Zoom to Marker** dari Hero Section
+- **Responsive Layout** untuk mobile dan desktop
+
+#### 4. Navigation & Footer
+- Navbar sticky dengan smooth scroll
+- Mobile hamburger menu
+- Footer dengan link navigasi dan social media
+- Semua link berfungsi dengan baik
+
+#### 5. Data Management
+- Centralized data structure di `src/data/umkmData.ts`
+- TypeScript interfaces untuk type safety
+- 10 UMKM dengan data lengkap
+- Helper functions untuk filtering dan searching
+
+### 🎨 Design Features
+- Mobile-first responsive design
+- Smooth animations dan transitions
+- Color scheme konsisten (Blue: #0B4EA2, Yellow: #FFC107)
+- Touch-friendly buttons untuk mobile
+- Loading states dan empty states
+
+### 📱 Responsive Breakpoints
+- Mobile: < 768px
+- Tablet: 768px - 1024px
+- Desktop: > 1024px
+
+## 🗂️ Struktur Project
+
+```
+wia-mamung/
+├── src/
+│   ├── assets/          # Images dan static files
+│   ├── components/      # React components
+│   │   ├── Navbar.tsx
+│   │   ├── HeroSection.tsx
+│   │   ├── CategorySection.tsx
+│   │   ├── LocationSection.tsx
+│   │   ├── Footer.tsx
+│   │   └── ui/          # Reusable UI components
+│   ├── data/            # Data dan helper functions
+│   │   └── umkmData.ts
+│   ├── App.tsx          # Main app component
+│   └── index.css        # Global styles
+├── .env                 # Environment variables (not committed)
+├── .gitignore
+├── package.json
+└── README.md
+```
+
+## 🔧 Build untuk Production
+
 ```bash
-npm run dev
+npm run build
 ```
 
-Buka [http://localhost:5173](http://localhost:5173) di browser.
-
-## 📁 Project Structure
-
-```
-src/
-├── components/
-│   ├── ui/
-│   │   └── button.tsx          # Reusable button component
-│   ├── Navbar.tsx              # Sticky navigation
-│   ├── HeroSection.tsx         # Hero with carousel
-│   ├── CategorySection.tsx     # Category cards with pagination
-│   ├── LocationSection.tsx     # Map with UMKM listings (Mapbox)
-│   └── Footer.tsx              # Footer
-├── App.tsx                     # Main app
-├── main.tsx                    # Entry point
-└── index.css                   # Global styles
-```
-
-## 🗺️ Mapbox Integration
-
-### Features
-- Interactive map dengan Mapbox
-- Custom markers untuk setiap UMKM
-- Zoom dan pan controls
-- Click markers untuk view details
-- Responsive design
-
-### Customization
-
-#### Change Map Style
-Edit `LocationSection.tsx`:
-```tsx
-mapStyle="mapbox://styles/mapbox/streets-v12"  // Streets (default)
-mapStyle="mapbox://styles/mapbox/dark-v11"     // Dark
-mapStyle="mapbox://styles/mapbox/light-v11"    // Light
-mapStyle="mapbox://styles/mapbox/satellite-v9" // Satellite
-```
-
-#### Update UMKM Locations
-Edit `umkmList` array in `LocationSection.tsx`:
-```tsx
-{
-  id: 1,
-  name: "UMKM Name",
-  category: "Kuliner",
-  latitude: -6.2088,   // Your coordinates
-  longitude: 106.8456,
-  color: "#EF4444"     // Marker color
-}
-```
-
-Get coordinates: [latlong.net](https://www.latlong.net/)
-
-## 🎨 Design System
-
-### Colors
-- Primary Blue: `#003F88`, `#00509D`
-- Accent Yellow: `#FFC107`
-- Category Colors: `#C4F0DD`, `#B4CCFE`, `#9FE8BE`
-
-### Responsive Breakpoints
-- Mobile: `< 768px`
-- Tablet: `768px - 1024px` (md)
-- Desktop: `> 1024px` (lg)
-
-## 📦 Tech Stack
-
-- **React 19** + TypeScript
-- **Vite** - Build tool
-- **Tailwind CSS** - Styling
-- **Mapbox GL JS** - Interactive maps
-- **react-map-gl** - React wrapper for Mapbox
-- **Lucide React** - Icons
-
-## 🔧 Available Scripts
-
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run lint     # Run ESLint
-```
+Output akan ada di folder `dist/`
 
 ## 📝 Environment Variables
 
-Create `.env` file:
-```
-VITE_MAPBOX_TOKEN=your_mapbox_token_here
-```
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `VITE_MAPBOX_TOKEN` | Mapbox access token untuk peta interaktif | Yes |
 
-**Note:** Never commit `.env` file to git. Use `.env.example` as template.
+## 🤝 Contributing
 
-## 🌟 Features
-
-- ✅ Fully responsive (mobile, tablet, desktop)
-- ✅ Interactive Mapbox integration
-- ✅ UMKM carousel with navigation
-- ✅ Category pagination system
-- ✅ Sticky navbar with scroll effects
-- ✅ Search and filter functionality
-- ✅ Custom markers with colors
-- ✅ Smooth animations and transitions
-
-## 📚 Documentation
-
-- [Mapbox Setup Guide](./MAPBOX_SETUP.md) - Detailed Mapbox setup
-- [Landing Page Docs](./LANDING_PAGE.md) - Component documentation
-
-## 🆓 Mapbox Free Tier
-
-- 50,000 map loads per month
-- No credit card required
-- Perfect for development and small projects
-
-## 🐛 Troubleshooting
-
-### Map not showing?
-1. Check `.env` file has correct token
-2. Restart dev server: `Ctrl+C` then `npm run dev`
-3. Check browser console for errors
-
-### TypeScript errors?
-```bash
-# Clear cache and reinstall
-rm -rf node_modules package-lock.json
-npm install
-```
+Contributions, issues, dan feature requests sangat diterima!
 
 ## 📄 License
 
-MIT
+This project is open source.
 
-## 👨‍💻 Author
+## 👨‍💻 Developer
 
-UMKM Sasuma Team
+Developed with ❤️ for UMKM Mamung
+
+---
+
+**Note:** Pastikan untuk tidak commit file `.env` ke repository. File ini sudah ada di `.gitignore`.

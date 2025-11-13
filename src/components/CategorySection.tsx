@@ -40,48 +40,50 @@ interface CategorySectionProps {
 }
 
 export default function CategorySection({ onCategoryClick }: CategorySectionProps) {
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [currentIndexDesktop, setCurrentIndexDesktop] = useState(0);
+    const [currentIndexMobile, setCurrentIndexMobile] = useState(0);
 
-    // Desktop: show 3 cards at a time
     const itemsPerPageDesktop = 3;
-    // Mobile: show 2 cards at a time
     const itemsPerPageMobile = 2;
-
-    // Calculate total pages
     const totalPagesDesktop = Math.ceil(categories.length / itemsPerPageDesktop);
     const totalPagesMobile = Math.ceil(categories.length / itemsPerPageMobile);
 
-    const handlePrev = () => {
-        setCurrentIndex((prev) => {
-            // Go to previous page (jump by itemsPerPageDesktop)
-            const newIndex = prev - itemsPerPageDesktop;
-            // Don't go below 0
-            return Math.max(0, newIndex);
-        });
+    // Desktop navigation
+    const handlePrevDesktop = () => {
+        setCurrentIndexDesktop((prev) => Math.max(0, prev - itemsPerPageDesktop));
     };
 
-    const handleNext = () => {
-        setCurrentIndex((prev) => {
-            // Go to next page (jump by itemsPerPageDesktop)
-            const newIndex = prev + itemsPerPageDesktop;
-            // Don't go beyond last page
+    const handleNextDesktop = () => {
+        setCurrentIndexDesktop((prev) => {
             const maxIndex = (totalPagesDesktop - 1) * itemsPerPageDesktop;
-            return Math.min(newIndex, maxIndex);
+            return Math.min(prev + itemsPerPageDesktop, maxIndex);
         });
     };
 
-    // Check if we're at the start or end
-    const isAtStart = currentIndex === 0;
-    const isAtEnd = currentIndex >= (totalPagesDesktop - 1) * itemsPerPageDesktop;
+    // Mobile navigation
+    const handlePrevMobile = () => {
+        setCurrentIndexMobile((prev) => Math.max(0, prev - itemsPerPageMobile));
+    };
+
+    const handleNextMobile = () => {
+        setCurrentIndexMobile((prev) => {
+            const maxIndex = (totalPagesMobile - 1) * itemsPerPageMobile;
+            return Math.min(prev + itemsPerPageMobile, maxIndex);
+        });
+    };
+
+    const isAtStartDesktop = currentIndexDesktop === 0;
+    const isAtEndDesktop = currentIndexDesktop >= (totalPagesDesktop - 1) * itemsPerPageDesktop;
+
+    const isAtStartMobile = currentIndexMobile === 0;
+    const isAtEndMobile = currentIndexMobile >= (totalPagesMobile - 1) * itemsPerPageMobile;
 
     const handleViewLocation = (categoryName: string) => {
         onCategoryClick(categoryName);
     };
 
-    // Get visible categories for desktop (show 3 cards per page)
-    const visibleCategoriesDesktop = categories.slice(currentIndex, currentIndex + itemsPerPageDesktop);
-    // Get visible categories for mobile (always show 2 cards)
-    const visibleCategoriesMobile = categories.slice(currentIndex, currentIndex + itemsPerPageMobile);
+    const visibleCategoriesDesktop = categories.slice(currentIndexDesktop, currentIndexDesktop + itemsPerPageDesktop);
+    const visibleCategoriesMobile = categories.slice(currentIndexMobile, currentIndexMobile + itemsPerPageMobile);
     return (
         <section className="py-12 md:py-20 px-4 md:px-20 bg-white">
             <div className="container mx-auto max-w-7xl">
@@ -105,10 +107,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                     {/* Navigation Buttons */}
                     <div className="flex gap-3 justify-end mb-6 px-2">
                         <button
-                            onClick={handlePrev}
-                            disabled={isAtStart}
+                            onClick={handlePrevMobile}
+                            disabled={isAtStartMobile}
                             className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                                isAtStart 
+                                isAtStartMobile 
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                                     : 'bg-[#00509D] text-white hover:bg-[#003d7a]'
                             }`}
@@ -116,10 +118,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                             <ChevronLeft className="w-5 h-5" />
                         </button>
                         <button
-                            onClick={handleNext}
-                            disabled={isAtEnd}
+                            onClick={handleNextMobile}
+                            disabled={isAtEndMobile}
                             className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
-                                isAtEnd 
+                                isAtEndMobile 
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                                     : 'bg-[#00509D] text-white hover:bg-[#003d7a]'
                             }`}
@@ -174,14 +176,24 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                         {/* Navigation Buttons */}
                         <div className="flex gap-3">
                             <button
-                                onClick={handlePrev}
-                                className="w-10 h-10 rounded-full bg-[#00509D] text-white flex items-center justify-center hover:bg-[#003d7a] transition-colors"
+                                onClick={handlePrevDesktop}
+                                disabled={isAtStartDesktop}
+                                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                                    isAtStartDesktop
+                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        : 'bg-[#00509D] text-white hover:bg-[#003d7a]'
+                                }`}
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
-                                onClick={handleNext}
-                                className="w-10 h-10 rounded-full bg-[#00509D] text-white flex items-center justify-center hover:bg-[#003d7a] transition-colors"
+                                onClick={handleNextDesktop}
+                                disabled={isAtEndDesktop}
+                                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                                    isAtEndDesktop
+                                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        : 'bg-[#00509D] text-white hover:bg-[#003d7a]'
+                                }`}
                             >
                                 <ChevronRight className="w-5 h-5" />
                             </button>
