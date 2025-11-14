@@ -1,36 +1,59 @@
+// src/components/Navbar.tsx (DIPERBARUI)
+
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom"; // <-- 1. Impor
 
+// 2. Ubah href menjadi 'to'
 const menuLink = [
-  { href: "#beranda", label: "Beranda" },
-  { href: "#kategori", label: "Kategori" },
-  { href: "#lokasi", label: "Lokasi" },
+  { to: "/#beranda", label: "Beranda" },
+  { to: "/#kategori", label: "Kategori" },
+  { to: "/#lokasi", label: "Lokasi" },
 ];
 
 export function Navbar() {
   const [isOpen, setOpen] = useState(false);
+  const navigate = useNavigate(); // <-- 3. Gunakan hook
+  const location = useLocation(); // <-- 3. Gunakan hook
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+  // 4. Logika klik BARU untuk menangani Link dan Scroll
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, to: string) => {
     e.preventDefault();
     setOpen(false);
-    
-    if (href === "#beranda") {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // Cek apakah 'to' memiliki hash (#)
+    const hashIndex = to.indexOf("#");
+
+    if (hashIndex === -1) {
+      // Jika tidak ada hash (cth: "/katalog")
+      navigate(to);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      const element = document.querySelector(href);
-      if (element) {
-        // Custom offset
-        let offset = 80; // default offset navbar
-        if (href === "#lokasi") {
-        offset = 15; // custom offset khusus untuk lokasi
-      }
-        const elementPosition = element.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - offset;
-        
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
+      // Jika ada hash (cth: "/#kategori" atau "#beranda")
+      const path = to.substring(0, hashIndex) || "/"; // Dapatkan path (cth: "/")
+      const hash = to.substring(hashIndex); // Dapatkan hash (cth: "#kategori")
+
+      // Jika kita sudah di halaman home, cukup scroll
+      if (location.pathname === "/" && path === "/") {
+        if (hash === "#beranda") {
+          window.scrollTo({ top: 0, behavior: "smooth" });
+          return;
+        }
+
+        const element = document.querySelector(hash);
+        if (element) {
+          let offset = 80; // default offset
+          if (hash === "#lokasi") offset = 15;
+
+          const elementPosition = element.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - offset;
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+      } else {
+        // Jika kita di halaman lain (cth: /katalog)
+        // Navigasi ke home DENGAN hash (cth: /#lokasi)
+        // Ini akan ditangkap oleh useEffect di HomePage.tsx
+        navigate(to);
       }
     }
   };
@@ -39,46 +62,45 @@ export function Navbar() {
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <nav className="relative flex w-full items-center justify-between h-16">
-          {/* Logo */}
-          <a 
-            href="#beranda" 
-            onClick={(e) => handleClick(e, "#beranda")}
+          {/* 5. Ganti <a> dengan <Link> */}
+          <Link
+            to="/#beranda"
+            onClick={(e) => handleClick(e, "/#beranda")}
             className="shrink-0 inline-flex items-center gap-2"
           >
             <div className="w-8 h-8 bg-[#0B4EA2] rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">M</span>
             </div>
-            <span className="text-xl font-bold text-slate-900">
-              Mamung
-            </span>
-          </a>
+            <span className="text-xl font-bold text-slate-900">Mamung</span>
+          </Link>
 
           {/* Desktop Menu Links */}
           <div className="hidden md:flex flex-1 justify-center items-center space-x-8">
             {menuLink.map((link) => (
-              <a
+              <Link // 5. Ganti <a> dengan <Link>
                 key={link.label}
-                href={link.href}
-                onClick={(e) => handleClick(e, link.href)}
+                to={link.to} // Ganti href
+                onClick={(e) => handleClick(e, link.to)}
                 className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
               >
                 {link.label}
-              </a>
+              </Link>
             ))}
           </div>
 
           {/* Get Started Button (Desktop) */}
           <div className="hidden md:flex shrink-0 items-center">
-            <a
-              href="#lokasi"
-              onClick={(e) => handleClick(e, "#lokasi")}
+            {/* 6. UBAH INI: "Mulai Jelajah" sekarang ke /katalog */}
+            <Link
+              to="/katalog" // <-- Ganti dari #lokasi
+              onClick={(e) => handleClick(e, "/katalog")}
               className="px-5 py-2 bg-[#FFC107] text-black text-sm font-medium rounded-lg  transition-colors"
             >
               Mulai Jelajah
-            </a>
+            </Link>
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle (Biarkan) */}
           <div className="md:hidden items-center">
             <button
               onClick={() => setOpen(!isOpen)}
@@ -92,7 +114,7 @@ export function Navbar() {
 
           {/* Mobile Dropdown Menu */}
           <div
-            className={`md:hidden absolute top-full left-0 w-full bg-white border-b border-gray-200 shadow-lg transition-all duration-300 ${
+            className={`md:hidden absolute top-full rounded-b-lg left-0 w-full bg-white border-b border-gray-200 shadow-lg transition-all duration-300 ${
               isOpen
                 ? "opacity-100 visible translate-y-0"
                 : "opacity-0 invisible -translate-y-4"
@@ -100,22 +122,23 @@ export function Navbar() {
           >
             <div className="p-4 space-y-3">
               {menuLink.map((link) => (
-                <a
+                <Link // 5. Ganti <a> dengan <Link>
                   key={link.label}
-                  href={link.href}
-                  onClick={(e) => handleClick(e, link.href)}
-                  className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
+                  to={link.to} // Ganti href
+                  onClick={(e) => handleClick(e, link.to)}
+                  className="block px-3 py-2 rounded-mdtext-base font-medium text-gray-700 hover:bg-gray-50"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
-              <a
-                href="#lokasi"
-                onClick={(e) => handleClick(e, "#lokasi")}
-                className="block w-full px-5 py-2 bg-black text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors text-center"
+              {/* 6. UBAH INI: "Mulai Jelajah" sekarang ke /katalog */}
+              <Link
+                to="/katalog" // <-- Ganti dari #lokasi
+                onClick={(e) => handleClick(e, "/katalog")}
+                className="block w-full px-5 py-2 bg-[#FFC107] text-black text-sm font-medium rounded-lg hover:bg-[#f5bc13]transition-colors text-center"
               >
                 Mulai Jelajah
-              </a>
+              </Link>
             </div>
           </div>
         </nav>

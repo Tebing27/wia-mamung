@@ -1,56 +1,28 @@
-import { useState, useRef } from "react";
-import CategorySection from "./components/CategorySection";
-import Footer from "./components/Footer";
-import HeroSection from "./components/HeroSection";
-import LocationSection from "./components/LocationSection";
+// src/App.tsx (BARU, JAUH LEBIH SEDERHANA)
+
+import { Routes, Route } from "react-router-dom";
 import { Navbar } from "./components/Navbar";
 
+// Impor 3 halaman baru yang kita buat
+import HomePage from "./pages/HomePage";
+import KatalogPage from "./pages/KatalogPage";
+import DetailPage from "./pages/DetailPage";
+
 function App() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedUmkmId, setSelectedUmkmId] = useState<number | null>(null);
-  const locationSectionRef = useRef<HTMLDivElement>(null);
-
-  // Handle category selection from CategorySection
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    setSelectedUmkmId(null);
-    locationSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  // Handle UMKM selection from HeroSection
-  const handleUmkmClick = (umkmId: number) => {
-    setSelectedUmkmId(umkmId);
-    setSelectedCategory(null);
-
-    requestAnimationFrame(() => {
-      if (locationSectionRef.current) {
-        const elementPosition = locationSectionRef.current.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - 80;
-
-        window.scrollTo({
-          top: offsetPosition,
-          behavior: 'smooth'
-        });
-      }
-    });
-  };
-
   return (
     <>
+      {/* Navbar selalu tampil di semua halaman */}
       <Navbar />
-      <div id="beranda">
-        <HeroSection onUmkmClick={handleUmkmClick} />
-      </div>
-      <div id="kategori">
-        <CategorySection onCategoryClick={handleCategoryClick} />
-      </div>
-      <div id="lokasi" ref={locationSectionRef}>
-        <LocationSection
-          selectedCategory={selectedCategory}
-          selectedUmkmId={selectedUmkmId}
-        />
-      </div>
-      <Footer />
+
+      {/* Routes mendefinisikan halaman mana yang tampil berdasarkan URL */}
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/katalog" element={<KatalogPage />} />
+        <Route path="/detail/:umkmId" element={<DetailPage />} />
+
+        {/* Jika URL tidak ditemukan, kembali ke Home */}
+        <Route path="*" element={<HomePage />} />
+      </Routes>
     </>
   );
 }
