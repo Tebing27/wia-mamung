@@ -55,11 +55,7 @@ const HighlightText = ({
   );
 };
 
-export default function UmkmCatalog({
-  onUmkmClick,
-  onBack,
-  onNavigateToSection,
-}: UmkmCatalogProps) {
+export default function UmkmCatalog({ onUmkmClick }: UmkmCatalogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Semua");
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);

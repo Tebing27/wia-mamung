@@ -11,10 +11,7 @@ interface HeroSectionProps {
   onMulaiJelajahClick?: () => void;
 }
 
-export default function HeroSection({
-  onUmkmClick,
-  onMulaiJelajahClick,
-}: HeroSectionProps) {
+export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentSlide = umkmData[currentIndex];
 
@@ -39,10 +36,6 @@ export default function HeroSection({
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
-  };
-
-  const handleLihatLokasi = () => {
-    onUmkmClick(currentSlide.id);
   };
 
   return (
