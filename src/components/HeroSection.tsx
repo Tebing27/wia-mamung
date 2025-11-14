@@ -2,6 +2,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
 import { getFeaturedUmkm } from "@/data/umkmData";
+import logoumkm from "../assets/logoumkm.jpeg";
 
 // Pastikan data Anda memiliki properti yang digunakan (name, category, description, imageUrl, id)
 const umkmData = getFeaturedUmkm();
@@ -173,7 +174,7 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
           {/* Right Image */}
           <div className="flex items-center justify-center order-first md:order-none">
             <img
-              src="./src/assets/logoumkm.jpeg" // Pastikan path ini benar
+              src={logoumkm} // Pastikan path ini benar
               alt="Logo"
               className="rounded-lg shadow-2xl w-full max-w-md h-64 sm:h-80 md:h-[500px] object-cover"
             />
