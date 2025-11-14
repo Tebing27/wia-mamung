@@ -172,7 +172,11 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
           {/* Right Image */}
           <div className="flex items-center justify-center order-first md:order-none">
             <img
+<<<<<<< HEAD
               src={logoumkm}
+=======
+              src={logoumkm} // Pastikan path ini benar
+>>>>>>> 9276b0e26649bd7fa657330d068df645b796be96
               alt="Logo"
               className="rounded-lg shadow-2xl w-full max-w-md h-64 sm:h-80 md:h-[500px] object-cover"
             />
