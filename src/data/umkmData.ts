@@ -114,6 +114,7 @@ export const umkmList: UmkmData[] = [
         tiktok: "saungicip",
         website: "saungicip.com",
         phone: "089681733955",
+        mapsUrl: "https://www.google.com/maps/place/Saung+Icip/@-6.41855,106.75305,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69e900211a939b:0x8b142319845e6c7f!8m2!3d-6.41855!4d106.75305!16s%2Fg%2F11lv4_tcl_",
         latitude: -6.41855,
         longitude: 106.75305,
         color: "#10B981", // green

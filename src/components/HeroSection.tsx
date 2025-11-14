@@ -7,9 +7,10 @@ const umkmData = getFeaturedUmkm();
 
 interface HeroSectionProps {
   onUmkmClick: (umkmId: number) => void;
+  onMulaiJelajahClick?: () => void;
 }
 
-export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
+export default function HeroSection({ onUmkmClick, onMulaiJelajahClick }: HeroSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentSlide = umkmData[currentIndex];
 
@@ -34,10 +35,6 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
-  };
-
-  const handleLihatLokasi = () => {
-    onUmkmClick(currentSlide.id);
   };
 
   return (
@@ -142,7 +139,7 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
               </div>
 
               <button
-                onClick={handleLihatLokasi}
+                onClick={onMulaiJelajahClick}
                 className="text-[#0B4EA2] text-xs md:text-sm font-semibold hover:underline inline-flex items-center gap-1 mt-3 md:mt-0"
               >
                 Lihat Lokasi →
