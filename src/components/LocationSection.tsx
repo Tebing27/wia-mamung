@@ -91,6 +91,18 @@ export default function LocationSection({ selectedCategory: propSelectedCategory
         setSelectedUmkmId(umkmId);
     };
 
+    // Handle zoom to location
+    const handleZoomToLocation = (umkmId: number) => {
+        const umkm = umkmList.find(u => u.id === umkmId);
+        if (umkm && mapRef.current) {
+            mapRef.current.flyTo({
+                center: [umkm.longitude, umkm.latitude],
+                zoom: 17,
+                duration: 2000
+            });
+        }
+    };
+
     // Handle close popup (just close, no scroll)
     const handleClosePopup = () => {
         setSelectedUmkmId(null);
@@ -243,12 +255,21 @@ export default function LocationSection({ selectedCategory: propSelectedCategory
                                             <p className="text-[10px] text-gray-500 mb-2 line-clamp-2">
                                                 {searchQuery ? highlightText(umkm.description, searchQuery) : umkm.description}
                                             </p>
-                                            <button
-                                                onClick={() => setSelectedUmkmId(umkm.id)}
-                                                className="text-xs text-[#003F88] font-semibold flex items-center gap-1 hover:underline"
-                                            >
-                                                Lihat Detail →
-                                            </button>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => setSelectedUmkmId(umkm.id)}
+                                                    className="text-xs text-[#003F88] font-semibold hover:underline"
+                                                >
+                                                    Lihat Detail
+                                                </button>
+                                                <span className="text-gray-300">|</span>
+                                                <button
+                                                    onClick={() => handleZoomToLocation(umkm.id)}
+                                                    className="text-xs text-[#10B981] font-semibold hover:underline"
+                                                >
+                                                    Lihat Lokasi
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -375,7 +396,7 @@ export default function LocationSection({ selectedCategory: propSelectedCategory
                             </div>
                         </div>
 
-                        {/* Results Count */}
+                        {/* Jumlah total UMKM */}
                         <div className="mb-3 px-1">
                             <p className="text-white text-xs">
                                 Menampilkan <span className="font-bold">{filteredUmkmList.length}</span> dari {umkmList.length} UMKM
@@ -388,7 +409,7 @@ export default function LocationSection({ selectedCategory: propSelectedCategory
                             </p>
                         </div>
 
-                        {/* UMKM Cards - Fixed height for consistency */}
+                        {/* Jika nama UMKM / Kategori tidak ditemuka */}
                         <div className="flex-1 flex flex-col gap-3 min-h-0">
                             {filteredUmkmList.length === 0 ? (
                                 <div className="flex-1 flex items-center justify-center">
@@ -438,12 +459,21 @@ export default function LocationSection({ selectedCategory: propSelectedCategory
                                                         {searchQuery ? highlightText(umkm.description, searchQuery) : umkm.description}
                                                     </p>
                                                 </div>
-                                                <button
-                                                    onClick={() => setSelectedUmkmId(umkm.id)}
-                                                    className="text-xs text-[#003F88] font-semibold flex items-center gap-1 hover:underline"
-                                                >
-                                                    Lihat Detail →
-                                                </button>
+                                                <div className="flex gap-2 items-center">
+                                                    <button
+                                                        onClick={() => setSelectedUmkmId(umkm.id)}
+                                                        className="text-xs text-[#003F88] font-semibold hover:underline"
+                                                    >
+                                                        Lihat Detail
+                                                    </button>
+                                                    <span className="text-gray-300">|</span>
+                                                    <button
+                                                        onClick={() => handleZoomToLocation(umkm.id)}
+                                                        className="text-xs text-[#003F88] font-semibold hover:underline"
+                                                    >
+                                                        Lihat Lokasi
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

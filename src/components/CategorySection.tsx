@@ -109,10 +109,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                         <button
                             onClick={handlePrevMobile}
                             disabled={isAtStartMobile}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg ${
                                 isAtStartMobile 
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                                    : 'bg-[#00509D] text-white hover:bg-[#003d7a]'
+                                    : 'bg-[#00509D] text-white hover:bg-[#003d7a] hover:scale-110'
                             }`}
                         >
                             <ChevronLeft className="w-5 h-5" />
@@ -120,10 +120,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                         <button
                             onClick={handleNextMobile}
                             disabled={isAtEndMobile}
-                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-lg ${
                                 isAtEndMobile 
                                     ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
-                                    : 'bg-[#00509D] text-white hover:bg-[#003d7a]'
+                                    : 'bg-[#00509D] text-white hover:bg-[#003d7a] hover:scale-110'
                             }`}
                         >
                             <ChevronRight className="w-5 h-5" />
@@ -132,10 +132,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
 
                     {/* Category Cards - 2 columns on mobile */}
                     <div className="grid grid-cols-2 gap-4">
-                        {visibleCategoriesMobile.map((category) => (
+                        {visibleCategoriesMobile.map((category, index) => (
                             <div
                                 key={category.id}
-                                className={`${category.bgColor} rounded-lg p-4 flex flex-col`}
+                                className={`${category.bgColor} rounded-2xl p-4 flex flex-col card-hover animate-scale-in animate-delay-${index * 100}`}
                             >
                                 <div className="bg-gray-800 rounded-lg h-[122px] mb-4 overflow-hidden">
                                     <img
@@ -152,10 +152,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                                 </p>
                                 <button
                                     onClick={() => handleViewLocation(category.name)}
-                                    className="flex items-center justify-center gap-1 text-xs hover:underline mx-auto text-gray-700"
+                                    className="flex items-center justify-center gap-1 text-xs font-semibold mx-auto text-gray-700 hover:text-gray-900 transition-all group"
                                 >
                                     Lihat Toko
-                                    <ArrowRight className="w-3 h-3" />
+                                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                                 </button>
                             </div>
                         ))}
@@ -203,10 +203,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                     {/* Right Side - Category Cards */}
                     <div className="col-span-9">
                         <div className="grid grid-cols-3 gap-6">
-                            {visibleCategoriesDesktop.map((category) => (
+                            {visibleCategoriesDesktop.map((category, index) => (
                                 <div
                                     key={category.id}
-                                    className={`${category.bgColor} rounded-lg p-6 flex flex-col`}
+                                    className={`${category.bgColor} rounded-2xl p-6 flex flex-col card-hover animate-scale-in animate-delay-${index * 100}`}
                                 >
                                     <div className="bg-gray-800 rounded-lg h-[180px] mb-6 overflow-hidden">
                                         <img
@@ -223,10 +223,10 @@ export default function CategorySection({ onCategoryClick }: CategorySectionProp
                                     </p>
                                     <button
                                         onClick={() => handleViewLocation(category.name)}
-                                        className="flex items-center justify-center gap-1 text-sm hover:underline mx-auto text-gray-700"
+                                        className="flex items-center justify-center gap-1 text-sm font-semibold mx-auto text-gray-700 hover:text-gray-900 transition-all group"
                                     >
                                         Lihat Toko
-                                        <ArrowRight className="w-4 h-4" />
+                                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                 </div>
                             ))}

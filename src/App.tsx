@@ -10,22 +10,22 @@ function App() {
   const [selectedUmkmId, setSelectedUmkmId] = useState<number | null>(null);
   const locationSectionRef = useRef<HTMLDivElement>(null);
 
+  // Handle category selection from CategorySection
   const handleCategoryClick = (category: string) => {
     setSelectedCategory(category);
-    setSelectedUmkmId(null); // Reset UMKM selection
-    // Scroll to location section
+    setSelectedUmkmId(null);
     locationSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  // Handle UMKM selection from HeroSection
   const handleUmkmClick = (umkmId: number) => {
     setSelectedUmkmId(umkmId);
     setSelectedCategory(null);
 
-    // Scroll to location section with custom offset
     requestAnimationFrame(() => {
       if (locationSectionRef.current) {
         const elementPosition = locationSectionRef.current.getBoundingClientRect().top;
-        const offsetPosition = elementPosition + window.pageYOffset - -160; // Adjust offset value as needed
+        const offsetPosition = elementPosition + window.pageYOffset - 80;
 
         window.scrollTo({
           top: offsetPosition,

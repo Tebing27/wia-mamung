@@ -41,22 +41,26 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
   };
 
   return (
-    <section className="bg-[#0B4EA2] text-white py-8 md:py-16">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-32">
-        <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-start">
-          {/* Left Content */}
-          <div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6">UMKM Mamung</h1>
-            <p className="text-sm sm:text-base md:text-lg mb-6 md:mb-8 leading-relaxed">
+    <section className="bg-[#0B4EA2] text-white py-12 md:py-20 relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-32 relative z-10">
+        <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+          <div className="animate-slide-in-left">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              UMKM Mamung
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl mb-8 leading-relaxed text-white/90">
               Temukan berbagai jenis usaha lokal, dari kuliner, kerajinan,
               sampai layanan jasa. Gunakan peta interaktif untuk mencari lokasi
               UMKM terdekat dan dukung perekonomian di sekitar kita.
             </p>
 
             {/* UMKM Card */}
-            <div className="bg-white text-black rounded-lg p-4 md:p-6">
+            <div className="bg-white text-black rounded-2xl p-5 md:p-7 shadow-2xl card-hover">
               <div className="text-xs md:text-sm text-gray-600 mb-2">
-                UMKM SASUMA
+                UMKM Mamung
               </div>
               
               {/* Mobile Layout - Stack vertically */}
