@@ -173,7 +173,7 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
           {/* Right Image */}
           <div className="flex items-center justify-center order-first md:order-none">
             <img
-              src="src\assets\logoumkm.jpeg" // Pastikan path ini benar
+              src="./src/assets/logoumkm.jpeg" // Pastikan path ini benar
               alt="Logo"
               className="rounded-lg shadow-2xl w-full max-w-md h-64 sm:h-80 md:h-[500px] object-cover"
             />
