@@ -136,6 +136,8 @@ export default function LocationSection({
   // Handle zoom to location
   const handleZoomToLocation = (umkmId: number) => {
     const umkm = umkmList.find((u) => u.id === umkmId);
+
+    // 3. Gerakkan peta
     if (umkm && mapRef.current) {
       mapRef.current.flyTo({
         center: [umkm.longitude, umkm.latitude],
@@ -316,7 +318,7 @@ export default function LocationSection({
                             : umkm.category}
                         </span>
                       </div>
-                      <p className="text-[10px] text-gray-500 mb-2">
+                      <p className="text-[10px] text-gray-500 mb-2 line-clamp-2">
                         {searchQuery
                           ? highlightText(umkm.description, searchQuery)
                           : umkm.description}
@@ -554,7 +556,7 @@ export default function LocationSection({
                                 : umkm.category}
                             </span>
                           </div>
-                          <p className="text-[11px] text-gray-600 leading-tight">
+                          <p className="text-[11px] text-gray-600 leading-tight line-clamp-3">
                             {searchQuery
                               ? highlightText(umkm.description, searchQuery)
                               : umkm.description}
@@ -716,7 +718,7 @@ export default function LocationSection({
                     </div>
 
                     {/* Description */}
-                    <p className="text-sm text-gray-700 leading-relaxed mb-4">
+                    <p className="text-sm text-gray-700 leading-relaxed mb-4 line-clamp-4">
                       {selectedUmkm.description}
                     </p>
 

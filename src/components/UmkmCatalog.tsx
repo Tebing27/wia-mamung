@@ -192,11 +192,11 @@ export default function UmkmCatalog({ onUmkmClick }: UmkmCatalogProps) {
 
                 {/* Content */}
                 <div className="p-5">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2">
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 line-clamp-2">
                     <HighlightText text={umkm.name} highlight={searchQuery} />
                   </h3>
 
-                  <p className="text-sm text-gray-600 mb-4">
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                     <HighlightText
                       text={umkm.description}
                       highlight={searchQuery}

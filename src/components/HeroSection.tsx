@@ -2,16 +2,15 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
 import { getFeaturedUmkm } from "@/data/umkmData";
+import logoumkm from "../assets/logoumkm.jpeg";
 
-// Pastikan data Anda memiliki properti yang digunakan (name, category, description, imageUrl, id)
 const umkmData = getFeaturedUmkm();
 
 interface HeroSectionProps {
   onUmkmClick: (umkmId: number) => void;
-  onMulaiJelajahClick?: () => void;
 }
 
-export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
+export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentSlide = umkmData[currentIndex];
 
@@ -38,6 +37,11 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
     setCurrentIndex(index);
   };
 
+  // Handler untuk tombol "Lihat Lokasi"
+  const handleLihatLokasi = () => {
+    onUmkmClick(currentSlide.id);
+  };
+
   return (
     <section className="bg-[#0B4EA2] text-white py-12 md:py-20 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
@@ -47,7 +51,6 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="animate-slide-in-left">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              {/* DISESUAIKAN: Sesuai gambar */}
               UMKM SASUMA.
             </h1>
             <p className="text-base sm:text-lg md:text-xl mb-8 leading-relaxed text-white/90">
@@ -59,7 +62,6 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
             {/* UMKM Card */}
             <div className="bg-white text-black rounded-2xl p-5 md:p-7 shadow-2xl card-hover">
               <div className="text-xs md:text-sm text-gray-600 mb-2">
-                {/* DISESUAIKAN: Sesuai gambar */}
                 UMKM SASUMA - PENGASINAN
               </div>
 
@@ -74,11 +76,9 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
                       {currentSlide.category}
                     </span>
                   )}
-                  <div className="min-h-[80px]">
-                    <p className="text-sm lg:text-base text-gray-600 mb-2">
-                      {currentSlide.description}
-                    </p>
-                  </div>
+                  <p className="text-sm lg:text-base text-gray-600 mb-2 line-clamp-2">
+                    {currentSlide.description}
+                  </p>
                 </div>
 
                 {/* Image with navigation */}
@@ -116,11 +116,9 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
                       </span>
                     )}
                   </h3>
-                  <div className="min-h-[80px]">
-                    <p className="text-sm lg:text-base text-gray-600 mb-2">
-                      {currentSlide.description}
-                    </p>
-                  </div>
+                  <p className="text-sm lg:text-base text-gray-600 mb-2 line-clamp-2">
+                    {currentSlide.description}
+                  </p>
                 </div>
                 <div className="relative ml-4 shrink-0">
                   <img
@@ -145,8 +143,9 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
                 </div>
               </div>
 
+              {/* PERBAIKAN: Gunakan handleLihatLokasi yang memanggil onUmkmClick */}
               <button
-                onClick={onMulaiJelajahClick}
+                onClick={handleLihatLokasi}
                 className="text-[#0B4EA2] text-xs md:text-sm font-semibold hover:underline inline-flex items-center gap-1 mt-3 md:mt-0 cursor-pointer"
               >
                 Lihat Lokasi →
@@ -173,7 +172,7 @@ export default function HeroSection({ onMulaiJelajahClick }: HeroSectionProps) {
           {/* Right Image */}
           <div className="flex items-center justify-center order-first md:order-none">
             <img
-              src="src\assets\logoumkm.jpeg" // Pastikan path ini benar
+              src={logoumkm}
               alt="Logo"
               className="rounded-lg shadow-2xl w-full max-w-md h-64 sm:h-80 md:h-[500px] object-cover"
             />
