@@ -9,6 +9,8 @@ import umkm7 from "../assets/umkm7.jpg";
 import umkm8 from "../assets/umkm8.jpg";
 import umkm9 from "../assets/umkm9.jpg";
 import umkm10 from "../assets/umkm10.jpg";
+import umkm11 from "../assets/umkm11.jpeg";
+import umkm12 from "../assets/umkm12.jpg";
 
 // TypeScript types for UMKM data
 export interface UmkmData {
@@ -45,7 +47,7 @@ export const categories: Category[] = [
   { value: "Jasa", label: "Jasa" },
 ];
 
-// UMKM data with coordinates (example coordinates around Jakarta/Depok area)
+// UMKM data with coordinates
 export const umkmList: UmkmData[] = [
   {
     id: 1,
@@ -66,7 +68,7 @@ export const umkmList: UmkmData[] = [
       "https://www.google.com/maps/place/Beeu+Kopi+X+Bunbun+Cemilan+Sehat/@-6.4085202,106.7494413,17z/data=!4m6!3m5!1s0x2e69e914525565d7:0xe8ff2be543f7cb27!8m2!3d-6.4084941!4d106.7495789!16s%2Fg%2F11q_7p40wl?hl=en-US&entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D", // Replace with actual Google Maps link
     latitude: -6.40843,
     longitude: 106.74957,
-    color: "#EF4444", // red
+    color: "#EF4444",
   },
   {
     id: 2,
@@ -87,7 +89,7 @@ export const umkmList: UmkmData[] = [
       "https://www.google.com/maps/place/Akaya_Homemade/@-6.4250986,106.7518071,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69e904bfddc265:0xfad5b1d0d64c95a8!8m2!3d-6.4250986!4d106.7566834!16s%2Fg%2F11fsp0h1rr?entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D",
     latitude: -6.42498,
     longitude: 106.75666,
-    color: "#3B82F6", // blue
+    color: "#3B82F6",
   },
   {
     id: 3,
@@ -107,7 +109,7 @@ export const umkmList: UmkmData[] = [
       "https://www.google.com/maps/place/Dapoer+Melyza/@-6.4213044,106.7556127,17z/data=!4m15!1m8!3m7!1s0x2e69e99e6be66ea5:0x5c21d6c614c57cde!2sDapoer+Melyza!8m2!3d-6.4213533!4d106.7556158!10e9!16s%2Fg%2F11lthkpfhs!3m5!1s0x2e69e99e6be66ea5:0x5c21d6c614c57cde!8m2!3d-6.4213533!4d106.7556158!16s%2Fg%2F11lthkpfhs?entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D",
     latitude: -6.42117,
     longitude: 106.75563,
-    color: "#F59E0B", // yellow
+    color: "#F59E0B",
   },
   {
     id: 4,
@@ -127,7 +129,7 @@ export const umkmList: UmkmData[] = [
     mapsUrl: "https://maps.app.goo.gl/HjZyKmQA9cB3z2Pp9",
     latitude: -6.41855,
     longitude: 106.75305,
-    color: "#10B981", // green
+    color: "#10B981",
     featured: true, // Mark as featured for hero section
   },
   {
@@ -149,7 +151,7 @@ export const umkmList: UmkmData[] = [
       "https://www.google.com/maps/place/Alesha+Kuliner/@-6.4146856,106.751491,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69e900211a939b:0x8b142319845e6c7f!8m2!3d-6.4146856!4d106.7540713!16s%2Fg%2F11lv4_tcl_?entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D",
     latitude: -6.41454,
     longitude: 106.75401,
-    color: "#8B5CF6", // purple
+    color: "#8B5CF6",
     featured: true,
   },
   {
@@ -171,7 +173,7 @@ export const umkmList: UmkmData[] = [
     phone: "089512203392",
     latitude: -6.41219,
     longitude: 106.75388,
-    color: "#EC4899", // pink
+    color: "#EC4899",
     featured: true,
   },
   {
@@ -193,7 +195,7 @@ export const umkmList: UmkmData[] = [
       "https://www.google.com/maps/place/Ucuynoel+Store/@-6.4034481,106.7652228,17z/data=!3m1!4b1!4m6!3m5!1s0x2e69e98cf23fd71f:0xbb519cb4e163e94b!8m2!3d-6.4034481!4d106.7678031!16s%2Fg%2F11j3rf55qm?entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D",
     latitude: -6.40319,
     longitude: 106.76766,
-    color: "#06B6D4", // cyan
+    color: "#06B6D4",
     featured: true,
   },
   {
@@ -208,14 +210,13 @@ export const umkmList: UmkmData[] = [
     license: "PIRT DEPKES",
     instagram: "rr_bakery._",
     facebook: "Reni Bakery",
-    tiktok: "renibakery",
     website: "renibakery.com",
     phone: "085711624656",
     mapsUrl:
       "https://www.google.com/maps/place/Reni+bakery/@-6.4287064,106.7607076,19.29z/data=!4m6!3m5!1s0x2e69e91e3edbf719:0xf346702273a980e3!8m2!3d-6.4286941!4d106.761008!16s%2Fg%2F11qgfjcyj_?entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D",
     latitude: -6.42868,
     longitude: 106.76099,
-    color: "#FBBF24", // amber
+    color: "#FBBF24",
   },
   {
     id: 9,
@@ -235,7 +236,7 @@ export const umkmList: UmkmData[] = [
       "https://www.google.com/maps/place/Nasi+Liwet+Lavanda+-+Jayamukti/@-6.3169147,107.1617895,18z/data=!4m12!1m5!3m4!2zNsKwMTgnNTguMSJTIDEwN8KwMDknNDYuNCJF!8m2!3d-6.3161389!4d107.1628889!3m5!1s0x2e699bab28de03a9:0xd6e84ab22894cb4d!8m2!3d-6.3164029!4d107.1627937!16s%2Fg%2F11h6tkcz0p?entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D",
     latitude: -6.31637,
     longitude: 107.1628,
-    color: "#FBBF24", // amber
+    color: "#FBBF24",
     featured: true,
   },
   {
@@ -255,7 +256,46 @@ export const umkmList: UmkmData[] = [
       "https://www.google.com/maps/place/Warkowar+(Warkop+Warisan)/@-6.2596199,107.1247417,21z/data=!4m6!3m5!1s0x2e6985001acea361:0xc2558381cd32db8e!8m2!3d-6.2595913!4d107.1246758!16s%2Fg%2F11yl0brdg_?entry=ttu&g_ep=EgoyMDI1MTExMC4wIKXMDSoASAFQAw%3D%3D",
     latitude: -6.25957,
     longitude: 107.12647,
-    color: "#006effff", // amber
+    color: "#006effff",
+    featured: true,
+  },
+  {
+    id: 11,
+    name: "Barare & Betirz Collection",
+    category: "Fashion",
+    description: "Daster murah, Bahan adem, Baju harian",
+    imageUrl: umkm11,
+    address:
+      "Jl. Ruko Perum Taman Aster Blk. F8 No.1, Sukadami, Cikarang Sel., Kabupaten Bekasi, Jawa Barat 17530",
+    license: "SIUP, IUMK",
+    instagram: "Barare",
+    facebook: "gorebo.b.kurniawan",
+    website: "tokopedia.com/barare-olshop",
+    phone: "08118725817",
+    mapsUrl:
+      "https://www.google.com/maps/place/BARARE+ONLINE+SHOP/@-6.3567862,107.1069743,17z/data=!3m1!4b1!4m6!3m5!1s0x2e699b29d5a0910b:0x2ba72ca09eb514d9!8m2!3d-6.3567862!4d107.1095546!16s%2Fg%2F11px4_x5p3?entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D",
+    latitude: -6.35667,
+    longitude: 107.10963,
+    color: "#06B6D4",
+  },
+  {
+    id: 12,
+    name: "By Clean Laundry",
+    category: "Jasa",
+    description: "Laundry Bebas Khawatir di Bekasi, Bogor dan Karawang! Pantau Proses Cucianmu & Nikmati Layanan Antar-Jemput Praktis!",
+    imageUrl: umkm12,
+    address:
+      "Jl. Raya Pengasinan No.05, RT.04/RW.03, Pengasinan, Kec. Rawalumbu, Kota Bks, Jawa Barat 17115",
+    license: "SPPL, NIB",
+    instagram: "by.cleanid",
+    facebook: "Bycleanlaundry",
+    website: "bycleanlaundry.com",
+    phone: "08111766791",
+    mapsUrl:
+      "https://www.google.com/maps/place/By+Clean+Premium+Laundry+Jatimulya/@-6.266347,107.016468,16z/data=!4m6!3m5!1s0x2e698f98f99be19b:0xf839c565837013b!8m2!3d-6.2663468!4d107.0164682!16s%2Fg%2F11hfjv9ch2?hl=id&entry=ttu&g_ep=EgoyMDI1MTExMS4wIKXMDSoASAFQAw%3D%3D",
+    latitude: -6.26579,
+    longitude: 107.01616,
+    color: "#06B6D4",
     featured: true,
   },
 ];
