@@ -1,6 +1,4 @@
 import {
-  ChevronLeft,
-  ChevronRight,
   ChevronUp,
   ChevronDown,
   Search,
@@ -11,11 +9,11 @@ import {
   Globe,
   Instagram,
   Facebook,
-  Utensils, // <--- DITAMBAHKAN
-  Shirt, // <--- DITAMBAHKAN
-  ShoppingBag, // <--- DITAMBAHKAN
-  Briefcase, // <--- DITAMBAHKAN
-  Store, // <--- DITAMBAHKAN
+  Utensils,
+  Shirt,
+  ShoppingBag,
+  Briefcase,
+  Store,
 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import Map, { Marker, NavigationControl } from "react-map-gl/mapbox";
@@ -23,8 +21,32 @@ import type { MapRef } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { umkmList, categories } from "@/data/umkmData";
 
-// Mapbox token from environment variable
+// Constants
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+const ITEMS_PER_PAGE = 4;
+const MAP_ZOOM_LEVEL = 17;
+const MAP_ZOOM_DURATION = 2000;
+const SCROLL_DELAY = 800;
+const ZOOM_RETRY_DELAY = 300;
+const MAX_ZOOM_RETRIES = 20;
+
+// Map initial view (Jabodetabek area)
+const MAP_CENTER = {
+  longitude: 106.827,
+  latitude: -6.2088,
+};
+
+// Initial zoom levels (lower = more zoomed out)
+const INITIAL_ZOOM_MOBILE = 8;
+const INITIAL_ZOOM_DESKTOP = 9;
+
+// Category icon mapping
+const CATEGORY_ICONS: { [key: string]: React.ElementType } = {
+  Kuliner: Utensils,
+  Fashion: Shirt,
+  Perdagangan: ShoppingBag,
+  Jasa: Briefcase,
+};
 
 interface LocationSectionProps {
   selectedCategory: string | null;
@@ -41,21 +63,11 @@ export default function LocationSection({
   const [currentPage, setCurrentPage] = useState(0);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [selectedUmkmId, setSelectedUmkmId] = useState<number | null>(null);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [isMobileMapLoaded, setIsMobileMapLoaded] = useState(false);
   const cardRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
   const mapRef = useRef<MapRef>(null);
-
-  // --- DITAMBAHKAN ---
-  // Map category names to Lucide icons
-  const categoryIcons: { [key: string]: React.ElementType } = {
-    Kuliner: Utensils,
-    Fashion: Shirt,
-    Perdagangan: ShoppingBag,
-    Jasa: Briefcase,
-  };
-
-  // A default icon if category doesn't match
-  const DefaultIcon = Store;
-  // --- BATAS PENAMBAHAN ---
+  const mobileMapRef = useRef<MapRef>(null);
 
   // Sync local category with prop category when it changes
   useEffect(() => {
@@ -66,18 +78,29 @@ export default function LocationSection({
 
   // Zoom to marker when UMKM is selected from HeroSection
   useEffect(() => {
-    if (propSelectedUmkmId && mapRef.current) {
-      const selectedUmkm = umkmList.find((u) => u.id === propSelectedUmkmId);
-      if (selectedUmkm) {
-        // Fly to the marker location with zoom
-        mapRef.current.flyTo({
+    if (!propSelectedUmkmId) return;
+
+    const selectedUmkm = umkmList.find((u) => u.id === propSelectedUmkmId);
+    if (!selectedUmkm) return;
+
+    const isMobile = window.innerWidth < 768;
+    const targetMapRef = isMobile ? mobileMapRef : mapRef;
+    const targetMapLoaded = isMobile ? isMobileMapLoaded : isMapLoaded;
+
+    const attemptZoom = (retries = 0) => {
+      if (targetMapLoaded && targetMapRef.current) {
+        targetMapRef.current.flyTo({
           center: [selectedUmkm.longitude, selectedUmkm.latitude],
-          zoom: 17,
-          duration: 2000,
+          zoom: MAP_ZOOM_LEVEL,
+          duration: MAP_ZOOM_DURATION,
         });
+      } else if (retries < MAX_ZOOM_RETRIES) {
+        setTimeout(() => attemptZoom(retries + 1), ZOOM_RETRY_DELAY);
       }
-    }
-  }, [propSelectedUmkmId]);
+    };
+
+    setTimeout(() => attemptZoom(), SCROLL_DELAY);
+  }, [propSelectedUmkmId, isMapLoaded, isMobileMapLoaded]);
 
   // Use local category as active category
   const activeCategory = localSelectedCategory;
@@ -133,34 +156,41 @@ export default function LocationSection({
   };
 
   // Handle zoom to location
-  // Handle zoom to location
   const handleZoomToLocation = (umkmId: number) => {
     const umkm = umkmList.find((u) => u.id === umkmId);
+    if (!umkm) return;
 
-    // 3. Gerakkan peta
-    if (umkm && mapRef.current) {
-      mapRef.current.flyTo({
-        center: [umkm.longitude, umkm.latitude],
-        zoom: 17,
-        duration: 2000,
-      });
+    const isMobile = window.innerWidth < 768;
+    const targetMapRef = isMobile ? mobileMapRef : mapRef;
+
+    if (isMobile) {
+      const mapSection = document.querySelector('.md\\:hidden .rounded-b-lg');
+      if (mapSection) {
+        mapSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
+
+    const zoomDelay = isMobile ? SCROLL_DELAY : 0;
+    setTimeout(() => {
+      if (targetMapRef.current) {
+        targetMapRef.current.flyTo({
+          center: [umkm.longitude, umkm.latitude],
+          zoom: MAP_ZOOM_LEVEL,
+          duration: MAP_ZOOM_DURATION,
+        });
+      }
+    }, zoomDelay);
   };
 
-  // Handle close popup (just close, no scroll)
-  const handleClosePopup = () => {
-    setSelectedUmkmId(null);
-  };
+  const handleClosePopup = () => setSelectedUmkmId(null);
 
-  // Show 4 cards at a time (both mobile and desktop)
-  const itemsPerPage = 4;
-  const totalPages = Math.ceil(filteredUmkmList.length / itemsPerPage);
+  // Pagination
+  const totalPages = Math.ceil(filteredUmkmList.length / ITEMS_PER_PAGE);
 
-  // Get visible UMKM for pagination
-  const startIndex = currentPage * itemsPerPage;
+  const startIndex = currentPage * ITEMS_PER_PAGE;
   const visibleUmkmList = filteredUmkmList.slice(
     startIndex,
-    startIndex + itemsPerPage
+    startIndex + ITEMS_PER_PAGE
   );
 
   // Check if at start or end for desktop
@@ -227,9 +257,8 @@ export default function LocationSection({
                     {activeCategory || "Semua"}
                   </span>
                   <ChevronDown
-                    className={`w-3 h-3 transition-transform ${
-                      showCategoryDropdown ? "rotate-180" : ""
-                    }`}
+                    className={`w-3 h-3 transition-transform ${showCategoryDropdown ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
@@ -240,11 +269,10 @@ export default function LocationSection({
                       <button
                         key={cat.value}
                         onClick={() => handleCategorySelect(cat.value)}
-                        className={`w-full px-3 py-2 text-xs text-left hover:bg-gray-50 flex items-center justify-between ${
-                          activeCategory === cat.value
+                        className={`w-full px-3 py-2 text-xs text-left hover:bg-gray-50 flex items-center justify-between ${activeCategory === cat.value
                             ? "bg-[#FFC107] font-semibold"
                             : ""
-                        }`}
+                          }`}
                       >
                         <span>{cat.label}</span>
                         {activeCategory === cat.value && (
@@ -350,22 +378,20 @@ export default function LocationSection({
                 <button
                   onClick={handlePrevPage}
                   disabled={isAtStart}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-colors ${
-                    isAtStart
+                  className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-colors ${isAtStart
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : "bg-white text-[#003F88] hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   <ChevronUp className="w-4 h-4" />
                 </button>
                 <button
                   onClick={handleNextPage}
                   disabled={isAtEnd}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-colors ${
-                    isAtEnd
+                  className={`w-9 h-9 rounded-full flex items-center justify-center shadow-md transition-colors ${isAtEnd
                       ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                       : "bg-white text-[#003F88] hover:bg-gray-100"
-                  }`}
+                    }`}
                 >
                   <ChevronDown className="w-4 h-4" />
                 </button>
@@ -376,46 +402,40 @@ export default function LocationSection({
           {/* Map - Mobile (Bottom) with real Mapbox */}
           <div className="rounded-b-lg h-[400px] sm:h-[500px] relative overflow-hidden">
             <Map
-              ref={mapRef}
+              ref={mobileMapRef}
               mapboxAccessToken={MAPBOX_TOKEN}
-              // --- initialViewState DIUBAH ---
               initialViewState={{
-                longitude: 106.756, // Pusat area Sawangan
-                latitude: -6.416, // Pusat area Sawangan
-                zoom: 13, // Lebih zoom-in
+                ...MAP_CENTER,
+                zoom: INITIAL_ZOOM_MOBILE,
               }}
               style={{ width: "100%", height: "100%" }}
               mapStyle="mapbox://styles/mapbox/streets-v12"
+              onLoad={() => setIsMobileMapLoaded(true)}
             >
               {/* Navigation Controls */}
               <NavigationControl position="bottom-right" />
 
               {/* UMKM Markers - Filtered by category */}
-              {filteredUmkmList.map((umkm) => (
-                <Marker
-                  key={umkm.id}
-                  longitude={umkm.longitude}
-                  latitude={umkm.latitude}
-                  anchor="bottom"
-                >
-                  {/* --- KODE MARKER DIUBAH --- */}
-                  {(() => {
-                    const IconComponent =
-                      categoryIcons[umkm.category] || DefaultIcon;
-                    return (
-                      <div
-                        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 sm:border-3 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform flex items-center justify-center"
-                        style={{ backgroundColor: umkm.color }}
-                        onClick={() => handleMarkerClick(umkm.id)}
-                        title={`${umkm.name} - ${umkm.category}`}
-                      >
-                        <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                      </div>
-                    );
-                  })()}
-                  {/* --- BATAS PERUBAHAN MARKER --- */}
-                </Marker>
-              ))}
+              {filteredUmkmList.map((umkm) => {
+                const IconComponent = CATEGORY_ICONS[umkm.category] || Store;
+                return (
+                  <Marker
+                    key={umkm.id}
+                    longitude={umkm.longitude}
+                    latitude={umkm.latitude}
+                    anchor="bottom"
+                  >
+                    <div
+                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 sm:border-3 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform flex items-center justify-center"
+                      style={{ backgroundColor: umkm.color }}
+                      onClick={() => handleMarkerClick(umkm.id)}
+                      title={`${umkm.name} - ${umkm.category}`}
+                    >
+                      <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+                    </div>
+                  </Marker>
+                );
+              })}
             </Map>
           </div>
         </div>
@@ -455,9 +475,8 @@ export default function LocationSection({
                     {activeCategory || "Semua"}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform ${
-                      showCategoryDropdown ? "rotate-180" : ""
-                    }`}
+                    className={`w-4 h-4 transition-transform ${showCategoryDropdown ? "rotate-180" : ""
+                      }`}
                   />
                 </button>
 
@@ -468,11 +487,10 @@ export default function LocationSection({
                       <button
                         key={cat.value}
                         onClick={() => handleCategorySelect(cat.value)}
-                        className={`w-full px-3 py-2 text-sm text-left hover:bg-gray-50 flex items-center justify-between ${
-                          activeCategory === cat.value
+                        className={`w-full px-3 py-2 text-sm text-left hover:bg-gray-50 flex items-center justify-between ${activeCategory === cat.value
                             ? "bg-[#FFC107] font-semibold"
                             : ""
-                        }`}
+                          }`}
                       >
                         <span>{cat.label}</span>
                         {activeCategory === cat.value && (
@@ -589,22 +607,20 @@ export default function LocationSection({
               <button
                 onClick={handlePrevPage}
                 disabled={isAtStart}
-                className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors ${
-                  isAtStart
+                className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors ${isAtStart
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-white text-[#003F88] hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 <ChevronUp className="w-5 h-5" />
               </button>
               <button
                 onClick={handleNextPage}
                 disabled={isAtEnd}
-                className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors ${
-                  isAtEnd
+                className={`w-10 h-10 rounded-full flex items-center justify-center shadow-md transition-colors ${isAtEnd
                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
                     : "bg-white text-[#003F88] hover:bg-gray-100"
-                }`}
+                  }`}
               >
                 <ChevronDown className="w-5 h-5" />
               </button>
@@ -616,45 +632,39 @@ export default function LocationSection({
             <Map
               ref={mapRef}
               mapboxAccessToken={MAPBOX_TOKEN}
-              // --- initialViewState & padding DIUBAH ---
               initialViewState={{
-                longitude: 106.756, // Pusat area Sawangan
-                latitude: -6.416, // Pusat area Sawangan
-                zoom: 13.5, // Lebih zoom-in (desktop)
+                ...MAP_CENTER,
+                zoom: INITIAL_ZOOM_DESKTOP,
               }}
-              padding={{ left: 350 }} // Untuk offset sidebar
+              padding={{ left: 350 }}
               style={{ width: "100%", height: "100%" }}
               mapStyle="mapbox://styles/mapbox/streets-v12"
+              onLoad={() => setIsMapLoaded(true)}
             >
               {/* Navigation Controls */}
               <NavigationControl position="bottom-right" />
 
               {/* UMKM Markers - Filtered by category */}
-              {filteredUmkmList.map((umkm) => (
-                <Marker
-                  key={umkm.id}
-                  longitude={umkm.longitude}
-                  latitude={umkm.latitude}
-                  anchor="bottom"
-                >
-                  {/* --- KODE MARKER DIUBAH --- */}
-                  {(() => {
-                    const IconComponent =
-                      categoryIcons[umkm.category] || DefaultIcon;
-                    return (
-                      <div
-                        className="w-10 h-10 rounded-full border-3 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform flex items-center justify-center"
-                        style={{ backgroundColor: umkm.color }}
-                        onClick={() => handleMarkerClick(umkm.id)}
-                        title={`${umkm.name} - ${umkm.category}`}
-                      >
-                        <IconComponent className="w-5 h-5 text-white" />
-                      </div>
-                    );
-                  })()}
-                  {/* --- BATAS PERUBAHAN MARKER --- */}
-                </Marker>
-              ))}
+              {filteredUmkmList.map((umkm) => {
+                const IconComponent = CATEGORY_ICONS[umkm.category] || Store;
+                return (
+                  <Marker
+                    key={umkm.id}
+                    longitude={umkm.longitude}
+                    latitude={umkm.latitude}
+                    anchor="bottom"
+                  >
+                    <div
+                      className="w-10 h-10 rounded-full border-3 border-white shadow-lg cursor-pointer hover:scale-110 transition-transform flex items-center justify-center"
+                      style={{ backgroundColor: umkm.color }}
+                      onClick={() => handleMarkerClick(umkm.id)}
+                      title={`${umkm.name} - ${umkm.category}`}
+                    >
+                      <IconComponent className="w-5 h-5 text-white" />
+                    </div>
+                  </Marker>
+                );
+              })}
             </Map>
           </div>
         </div>
@@ -674,24 +684,17 @@ export default function LocationSection({
                   className="bg-white rounded-2xl shadow-2xl w-full max-w-[420px] max-h-[90vh] overflow-y-auto"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* Image Carousel */}
+                  {/* Image */}
                   <div className="relative h-[240px] bg-gray-200">
                     <img
                       src={selectedUmkm.imageUrl}
                       alt={selectedUmkm.name}
                       className="w-full h-full object-cover"
                     />
-                    {/* Navigation Arrows */}
-                    <button className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700">
-                      <ChevronLeft className="w-5 h-5 text-white" />
-                    </button>
-                    <button className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700">
-                      <ChevronRight className="w-5 h-5 text-white" />
-                    </button>
                     {/* Close Button */}
                     <button
                       onClick={() => setSelectedUmkmId(null)}
-                      className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white"
+                      className="absolute top-3 right-3 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center hover:bg-white shadow-lg"
                     >
                       <X className="w-5 h-5 text-gray-700" />
                     </button>

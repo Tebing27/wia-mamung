@@ -2,7 +2,6 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState, useEffect } from "react";
 import { getFeaturedUmkm } from "@/data/umkmData";
-import logoumkm from "../assets/logoumkm.jpeg";
 
 const umkmData = getFeaturedUmkm();
 
@@ -19,7 +18,7 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
     const interval = setInterval(() => {
       nextSlide();
     }, 5000);
-
+    
     return () => clearInterval(interval);
   }, [currentIndex]);
 
@@ -37,7 +36,6 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
     setCurrentIndex(index);
   };
 
-  // Handler untuk tombol "Lihat Lokasi"
   const handleLihatLokasi = () => {
     onUmkmClick(currentSlide.id);
   };
@@ -46,12 +44,12 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
     <section className="bg-[#0B4EA2] text-white py-12 md:py-20 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
-
+      
       <div className="container mx-auto px-4 sm:px-6 lg:px-32 relative z-10">
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="animate-slide-in-left">
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight">
-              UMKM SASUMA.
+              UMKM Mamung
             </h1>
             <p className="text-base sm:text-lg md:text-xl mb-8 leading-relaxed text-white/90">
               Temukan berbagai jenis usaha lokal, dari kuliner, kerajinan,
@@ -62,13 +60,13 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
             {/* UMKM Card */}
             <div className="bg-white text-black rounded-2xl p-5 md:p-7 shadow-2xl card-hover">
               <div className="text-xs md:text-sm text-gray-600 mb-2">
-                UMKM SASUMA - PENGASINAN
+                UMKM Mamung
               </div>
-
-              {/* Mobile Layout - Stack vertically */}
-              <div className="lg:hidden">
+              
+              {/* Mobile Layout - Stack vertikal */}
+              <div className="md:hidden">
                 <div className="mb-3">
-                  <h3 className="text-lg sm:text-xl font-bold mb-2">
+                  <h3 className="text-lg font-bold mb-2">
                     {currentSlide.name}
                   </h3>
                   {currentSlide.category && (
@@ -76,28 +74,28 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
                       {currentSlide.category}
                     </span>
                   )}
-                  <p className="text-sm lg:text-base text-gray-600 mb-2 line-clamp-2">
+                  <p className="text-xs text-gray-600 mb-2 line-clamp-2">
                     {currentSlide.description}
                   </p>
                 </div>
-
+                
                 {/* Image with navigation */}
                 <div className="relative">
                   <img
                     src={currentSlide.imageUrl}
                     alt={currentSlide.name}
-                    className="w-full h-40 sm:h-48 object-cover rounded-lg"
+                    className="w-full h-40 object-cover rounded-lg"
                   />
                   <Button
                     size="icon"
-                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full cursor-pointer"
+                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full"
                     onClick={prevSlide}
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </Button>
                   <Button
                     size="icon"
-                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full cursor-pointer"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full"
                     onClick={nextSlide}
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -106,7 +104,7 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
               </div>
 
               {/* Desktop Layout - Side by side */}
-              <div className="hidden lg:flex items-center justify-between mb-4">
+              <div className="hidden md:flex items-center justify-between mb-4">
                 <div className="flex-1">
                   <h3 className="text-xl lg:text-2xl font-bold mb-2">
                     {currentSlide.name}{" "}
@@ -116,11 +114,11 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
                       </span>
                     )}
                   </h3>
-                  <p className="text-sm lg:text-base text-gray-600 mb-2 line-clamp-2">
+                  <p className="text-sm text-gray-600 mb-2 line-clamp-2">
                     {currentSlide.description}
                   </p>
                 </div>
-                <div className="relative ml-4 shrink-0">
+                <div className="relative ml-4 flex-shrink-0">
                   <img
                     src={currentSlide.imageUrl}
                     alt={currentSlide.name}
@@ -128,14 +126,14 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
                   />
                   <Button
                     size="icon"
-                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full cursor-pointer"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full"
                     onClick={prevSlide}
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </Button>
                   <Button
                     size="icon"
-                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full cursor-pointer"
+                    className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 bg-[#0B4EA2] hover:bg-[#083d7f] w-8 h-8 rounded-full"
                     onClick={nextSlide}
                   >
                     <ChevronRight className="w-4 h-4" />
@@ -143,10 +141,9 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
                 </div>
               </div>
 
-              {/* PERBAIKAN: Gunakan handleLihatLokasi yang memanggil onUmkmClick */}
               <button
                 onClick={handleLihatLokasi}
-                className="text-[#0B4EA2] text-xs md:text-sm font-semibold hover:underline inline-flex items-center gap-1 mt-3 md:mt-0 cursor-pointer"
+                className="text-[#0B4EA2] text-xs md:text-sm font-semibold hover:underline inline-flex items-center gap-1 mt-3 md:mt-0"
               >
                 Lihat Lokasi →
               </button>
@@ -159,9 +156,9 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`w-2 h-2 rounded-full transition-all ${
-                    index === currentIndex
-                      ? "bg-white w-6"
-                      : "bg-white/50 hover:bg-white/75"
+                    index === currentIndex 
+                      ? 'bg-white w-6' 
+                      : 'bg-white/50 hover:bg-white/75'
                   }`}
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -172,7 +169,7 @@ export default function HeroSection({ onUmkmClick }: HeroSectionProps) {
           {/* Right Image */}
           <div className="flex items-center justify-center order-first md:order-none">
             <img
-              src={logoumkm} // Pastikan path ini benar
+              src="src\assets\logoumkm.jpeg"
               alt="Logo"
               className="rounded-lg shadow-2xl w-full max-w-md h-64 sm:h-80 md:h-[500px] object-cover"
             />

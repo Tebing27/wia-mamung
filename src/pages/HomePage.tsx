@@ -1,27 +1,24 @@
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import CategorySection from "../components/CategorySection";
+import StatisticsSection from "../components/StatisticsSection";
 import Footer from "../components/Footer";
 import HeroSection from "../components/HeroSection";
 import LocationSection from "../components/LocationSection";
 
 export default function HomePage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedUmkmId, setSelectedUmkmId] = useState<number | null>(null);
 
-  // Ref untuk scroll ke LocationSection
   const locationSectionRef = useRef<HTMLDivElement>(null);
 
   const location = useLocation();
 
-  // Handle scroll untuk hash URL manual (/#lokasi atau /#kategori)
   useEffect(() => {
     const hash = location.hash;
     if (hash) {
       setTimeout(() => {
         const element = document.querySelector(hash);
         if (element) {
-          const offset = 80; // 80px offset untuk header
+          const offset = 80;
           const elementPosition = element.getBoundingClientRect().top;
           const offsetPosition = elementPosition + window.pageYOffset - offset;
 
@@ -34,30 +31,21 @@ export default function HomePage() {
     }
   }, [location.hash]);
 
-  // Handler ketika category di-klik dari CategorySection
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    setSelectedUmkmId(null); // Reset selected UMKM
-
-    // Scroll ke LocationSection
-    scrollToLocationSection();
-  };
-
   // Handler ketika "Lihat Lokasi" di-klik dari HeroSection
   const handleUmkmClick = (umkmId: number) => {
-    setSelectedUmkmId(umkmId); // Set UMKM yang dipilih
-    setSelectedCategory(null); // Reset category filter
+    setSelectedUmkmId(umkmId);
 
-    // Scroll ke LocationSection
     scrollToLocationSection();
   };
 
-  // Fungsi helper untuk scroll (DRY principle)
   const scrollToLocationSection = () => {
     if (locationSectionRef.current) {
+      const isMobile = window.innerWidth < 768;
+      const offset = isMobile ? -605 : -160;
+
       const elementPosition =
         locationSectionRef.current.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - 80; // 80px offset
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
 
       window.scrollTo({
         top: offsetPosition,
@@ -72,13 +60,13 @@ export default function HomePage() {
         <HeroSection onUmkmClick={handleUmkmClick} />
       </div>
 
-      <div id="kategori">
-        <CategorySection onCategoryClick={handleCategoryClick} />
+      <div id="statistik">
+        <StatisticsSection />
       </div>
 
       <div id="lokasi" ref={locationSectionRef}>
         <LocationSection
-          selectedCategory={selectedCategory}
+          selectedCategory={null}
           selectedUmkmId={selectedUmkmId}
         />
       </div>

@@ -57,11 +57,13 @@ Platform web interaktif untuk menemukan dan mendukung UMKM (Usaha Mikro, Kecil, 
 - Hero section dengan carousel auto-play menampilkan UMKM unggulan
 - Responsive design untuk mobile, tablet, dan desktop
 - Tombol "Lihat Lokasi" yang mengarah ke peta dengan zoom otomatis
+- Smooth animations dan transitions
 
-#### 2. Halaman Kategori
-- Tampilan kategori UMKM (Kuliner, Fashion, Perdagangan, Jasa)
-- Pagination dengan navigasi prev/next
-- Filter kategori yang terintegrasi dengan peta
+#### 2. Statistics Section
+- Menampilkan statistik UMKM (Total UMKM, Kategori, Pengunjung, Rating, dll)
+- Counter animation yang naik saat scroll
+- Responsive grid layout dengan gradient colors
+- CTA button untuk pendaftaran UMKM
 
 #### 3. Halaman Lokasi (Map Section)
 - **Peta Interaktif Mapbox** dengan marker untuk setiap UMKM
@@ -78,24 +80,42 @@ Platform web interaktif untuk menemukan dan mendukung UMKM (Usaha Mikro, Kecil, 
 - **Zoom to Marker** dari Hero Section
 - **Responsive Layout** untuk mobile dan desktop
 
-#### 4. Navigation & Footer
-- Navbar sticky dengan smooth scroll
+#### 4. Halaman Katalog
+- Grid layout untuk menampilkan semua UMKM
+- Search dan filter functionality
+- Pagination system
+- Link ke detail page setiap UMKM
+
+#### 5. Halaman Detail UMKM
+- Informasi lengkap UMKM
+- Image carousel
+- Contact information dan social media
+- Google Maps integration
+- Back navigation
+
+#### 6. Navigation & Footer
+- Navbar sticky dengan smooth scroll dan React Router
 - Mobile hamburger menu
-- Footer dengan link navigasi dan social media
+- Footer modern dengan 4 kolom (Brand, Navigation, About, Contact)
+- Social media icons dengan hover effects
 - Semua link berfungsi dengan baik
 
-#### 5. Data Management
+#### 7. Data Management
 - Centralized data structure di `src/data/umkmData.ts`
 - TypeScript interfaces untuk type safety
-- 10 UMKM dengan data lengkap
+- 82+ UMKM dengan data lengkap (nama, kategori, alamat, koordinat, kontak, dll)
 - Helper functions untuk filtering dan searching
+- Category icons mapping dengan Lucide icons
 
 ### 🎨 Design Features
 - Mobile-first responsive design
-- Smooth animations dan transitions
+- Smooth animations dan transitions (fade-in, slide-in, scale, hover effects)
 - Color scheme konsisten (Blue: #0B4EA2, Yellow: #FFC107)
 - Touch-friendly buttons untuk mobile
 - Loading states dan empty states
+- Gradient backgrounds dan modern UI components
+- Intersection Observer untuk animation triggers
+- Custom Mapbox markers dengan category icons
 
 ### 📱 Responsive Breakpoints
 - Mobile: < 768px
@@ -111,15 +131,22 @@ wia-mamung/
 │   ├── components/      # React components
 │   │   ├── Navbar.tsx
 │   │   ├── HeroSection.tsx
-│   │   ├── CategorySection.tsx
+│   │   ├── StatisticsSection.tsx
 │   │   ├── LocationSection.tsx
+│   │   ├── UmkmCatalog.tsx
+│   │   ├── UmkmDetail.tsx
 │   │   ├── Footer.tsx
-│   │   └── ui/          # Reusable UI components
+│   │   └── ui/          # Reusable UI components (button, etc)
+│   ├── pages/           # Page components
+│   │   ├── HomePage.tsx
+│   │   ├── KatalogPage.tsx
+│   │   └── DetailPage.tsx
 │   ├── data/            # Data dan helper functions
 │   │   └── umkmData.ts
-│   ├── App.tsx          # Main app component
-│   └── index.css        # Global styles
+│   ├── App.tsx          # Main app with routing
+│   └── index.css        # Global styles & animations
 ├── .env                 # Environment variables (not committed)
+├── .env.example         # Example environment variables
 ├── .gitignore
 ├── package.json
 └── README.md
